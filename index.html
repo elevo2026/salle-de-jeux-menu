@@ -52,7 +52,7 @@ button:focus-visible{outline:3px solid var(--fg);outline-offset:2px}
 </head>
 <body>
 <main>
-<h1>Salle de jeux</h1>
+<h1 id='t'>Salle de jeux</h1>
 <div class="tabs" id="tabs"></div>
 <div id="area"></div>
 </main>
@@ -273,7 +273,7 @@ function ts(p,r){busy=true;sel=null;sw(p,r);draw();if(fm().n===0){setTimeout(fun
 function fin(){if(sc>best){best=sc;try{localStorage.setItem('trio-best',String(best))}catch(e){}}upd();info.textContent='Partie finie ! '+info.textContent;btn.textContent='Rejouer';btn.hidden=false}
 function go(){sc=0;mv=25;fill();sel=null;fl={};busy=false;btn.hidden=true;upd();draw()}
 function draw(){x.clearRect(0,0,W,W);x.textAlign='center';x.textBaseline='middle';for(var y=0;y<N;y++)for(var i=0;i<N;i++){if((i+y)%2){x.fillStyle='rgba(128,128,128,.14)';x.fillRect(i*c,y*c,c,c)}var cx=i*c+c/2,cy=y*c+c/2;if(fl[i+','+y]){x.font=Math.floor(c*0.7)+'px serif';x.fillText('✨',cx,cy+1)}else if(B[y][i]>=0){x.font=Math.floor(c*0.66)+'px serif';x.fillText(F[B[y][i]],cx,cy+1)}}if(sel){x.strokeStyle='#e8590c';x.lineWidth=3;x.strokeRect(sel.x*c+2,sel.y*c+2,c-4,c-4)}}
-function ca(e){var r=cv.getBoundingClientRect();return{x:Math.max(0,Math.min(N-1,Math.floor((e.clientX-r.left)/c))),y:Math.max(0,Math.min(N-1,Math.floor((e.clientY-r.top)/c)))} }
+function ca(e){var r=cv.getBoundingClientRect();return{x:Math.max(0,Math.min(N-1,Math.floor((e.clientX-r.left)/c))),y:Math.max(0,Math.min(N-1,Math.floor((e.clientY-r.top)/c)))}}
 cv.addEventListener('pointerdown',function(e){dn=busy?null:{c:ca(e),x:e.clientX,y:e.clientY}});
 cv.addEventListener('pointerup',function(e){if(!dn||busy){dn=null;return}var p=dn.c,dx=e.clientX-dn.x,dy=e.clientY-dn.y;dn=null;if(Math.max(Math.abs(dx),Math.abs(dy))>c*0.4){var t=Math.abs(dx)>Math.abs(dy)?{x:p.x+(dx>0?1:-1),y:p.y}:{x:p.x,y:p.y+(dy>0?1:-1)};if(t.x>=0&&t.y>=0&&t.x<N&&t.y<N)ts(p,t);return}if(sel&&Math.abs(sel.x-p.x)+Math.abs(sel.y-p.y)===1)ts(sel,p);else if(sel&&sel.x===p.x&&sel.y===p.y){sel=null;draw()}else{sel=p;draw()}});
 btn.onclick=go;fill();upd();info.textContent='Échange deux plats voisins pour en aligner 3 !';draw();
@@ -339,6 +339,7 @@ r.onclick=reset;reset();
 [['snk','🐍 Snake'],['pac','👻 Pac-Man'],['tri','🍰 Trio'],['mem','🃏 Memory'],['att','🧺 Attrape'],['puz','🧩 Puzzle'],['ttt','❌ Morpion'],['sud','🔢 Sudoku'],['can','🎯 Canon'],['p4','🔴 Puissance 4']].forEach(function(g){
 var b=E('button','',g[1]);b.onclick=function(){show(g[0])};tabs.appendChild(b);btns[g[0]]=b;
 });
+try{var nm=new URLSearchParams(window.location.search).get('nom');if(nm){document.getElementById('t').textContent=nm.slice(0,40);document.title=nm.slice(0,40)}}catch(e){}
 show('snk');
 })();
 </script>
