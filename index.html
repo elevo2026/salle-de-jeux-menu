@@ -127,19 +127,18 @@ info.textContent='Attrape les plats, évite les 🐛 !';draw();
 }};
 
 games.puz={init:function(a){
-var S=Math.min(window.innerWidth-24,330),dpr=window.devicePixelRatio||1,cs=S/3,ei=0,t,moves,won;
+var S=Math.min(window.innerWidth-24,330),dpr=window.devicePixelRatio||1,cs=S/3,ei=0,t,moves,won,PZ=[['🍕','🍔','🍟','🌭','🥗','🍝','🍣','🍩','🍦'],['🍎','🍌','🍇','🍓','🍉','🍊','🍒','🍍','🥝'],['🥐','🥖','🧀','🥞','🍳','🥓','🍰','🧁','🍪']];
 var info=E('div','info'),cv=E('canvas','cv'),btn=E('button','','Nouveau puzzle');
 cv.width=cv.height=S*dpr;cv.style.width=cv.style.height=S+'px';
 var c=cv.getContext('2d');c.scale(dpr,dpr);
 var off=document.createElement('canvas');off.width=off.height=S*dpr;
-a.append(info,cv,btn);
+var pv=E('canvas','cv');pv.width=pv.height=90;pv.style.width=pv.style.height='90px';a.append(info,pv,cv,btn);
 function pic(){
 var o=off.getContext('2d');o.setTransform(dpr,0,0,dpr,0,0);
-var g=o.createLinearGradient(0,0,S,S);g.addColorStop(0,'#ffd27a');g.addColorStop(1,'#ff9a62');
-o.fillStyle=g;o.fillRect(0,0,S,S);
-o.font=Math.floor(S*0.72)+'px serif';o.textAlign='center';o.textBaseline='middle';o.fillText(F[ei],S/2,S/2+S*0.04);
+var st=PZ[ei%PZ.length];o.textAlign='center';o.textBaseline='middle';o.font=Math.floor(cs*0.6)+'px serif';for(var k=0;k<9;k++){var qx=(k%3)*cs,qy=Math.floor(k/3)*cs;o.fillStyle='hsl('+(k*40+20)+',85%,85%)';o.fillRect(qx,qy,cs,cs);o.fillStyle='#000';o.fillText(st[k],qx+cs/2,qy+cs/2+cs*0.04)}
+pv.getContext('2d').drawImage(off,0,0,S*dpr,S*dpr,0,0,90,90);
 }
-function upd(){info.textContent=won?'Bravo ! Image reconstituée en '+moves+' coups 🎉':'Remets l’image en ordre ! Coups : '+moves}
+function upd(){info.textContent=won?'Bravo ! Puzzle reconstitué en '+moves+' coups 🎉':'Remets les plats comme sur le modèle ! Coups : '+moves}
 function draw(){
 c.clearRect(0,0,S,S);
 for(var i=0;i<9;i++){
@@ -167,7 +166,7 @@ won=t.every(function(v,k){return v===k});
 upd();draw();
 }
 });
-btn.onclick=function(){ei=(ei+1)%F.length;shuffle()};
+btn.onclick=function(){ei=(ei+1)%PZ.length;shuffle()};
 shuffle();
 }};
 
